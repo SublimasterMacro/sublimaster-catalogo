@@ -281,7 +281,7 @@ h1.cat-titulo{
 // =============================================
 const WHATSAPP     = "5566992229692";
 const BASE_URL     = "https://impressione.online";
-const PROXY        = "https://api.allorigins.win/get?url=";
+const PROXY        = "https://corsproxy.io/?";
 const POR_PAGINA   = 20; // imagens por página no nosso site
 
 const CATEGORIAS = [
@@ -328,8 +328,8 @@ async function carregarContagem(cat) {
   try {
     const url = `${BASE_URL}/index.php?categoria=${cat.slug}`;
     const res = await fetch(`${PROXY}${encodeURIComponent(url)}`);
-    const data = await res.json();
-    const match = data.contents.match(/Total:\s*<strong>(\d+)<\/strong>/);
+    const html = await res.text();
+    const match = html.match(/Total:\s*<strong>(\d+)<\/strong>/);
     if (match) {
       const badge = document.getElementById(`badge-${cat.slug}`);
       if (badge) badge.textContent = match[1] + " artes";
@@ -399,8 +399,7 @@ async function fetchPagina(slug, pagina) {
     const url = `${BASE_URL}/index.php?categoria=${slug}&pagina=${pagina}`;
     const res = await fetch(`${PROXY}${encodeURIComponent(url)}`);
     if (!res.ok) return null;
-    const data = await res.json();
-    const html = data.contents;
+    const html = await res.text();
 
     // Extrair imagens (thumbs)
     const imgRegex = /src="(uploads\/[^"]+thumbs\/[^"]+?)(?:\?[^"]*)?"/g;
