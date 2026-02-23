@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Sublimaster | Catálogo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<style>
+:root{
+  --primaria:#FF6B00;
+  --primaria-dark:#e05a00;
+  --secundaria:#1a1a2e;
+  --borda:#e5e7eb;
+  --txt:#1f2937;
+  --muted:#6b7280;
+  --bg:#f9fafb;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--txt);}
+
+/* Header */
+header{
+  position:sticky;top:0;
+  background:var(--secundaria);
+  padding:14px 16px;
+  text-align:center;
+  border-bottom:3px solid var(--primaria);
+  z-index:50;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+}
+.logo-text{
+  font-family:'Bebas Neue',cursive;
+  font-size:36px;color:#fff;letter-spacing:3px;line-height:1;
+}
+.logo-text span{color:var(--primaria);}
+.logo-img{max-height:58px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.3));}
+.topo-contato{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px;}
+.btn-topo{
+  display:flex;align-items:center;gap:8px;
+  background:var(--primaria);color:#fff;
+  padding:9px 16px;border-radius:10px;
+  text-decoration:none;font-weight:800;font-size:14px;
+  transition:transform .12s,background .2s;
+}
+.btn-topo:hover{background:var(--primaria-dark);transform:translateY(-2px);}
+
+/* Divider animado */
+.divider{
+  height:4px;
+  background:linear-gradient(90deg,var(--primaria),#FFD700,var(--primaria));
+  background-size:200% 100%;
+  animation:shimmer 3s infinite linear;
+}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+
+/* Hero */
+.hero{
+  background:linear-gradient(135deg,var(--secundaria) 0%,#16213e 100%);
+  padding:40px 20px 50px;text-align:center;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(ellipse at 60% 40%,rgba(255,107,0,0.15) 0%,transparent 60%);
+  pointer-events:none;
+}
+.hero-sub{color:#aaa;font-size:13px;letter-spacing:4px;text-transform:uppercase;margin-bottom:6px;}
+.hero-title{font-family:'Bebas Neue',cursive;font-size:52px;color:#fff;letter-spacing:4px;line-height:1;margin-bottom:8px;}
+.hero-title span{color:var(--primaria);}
+.hero-desc{color:#ccc;font-size:15px;}
+
+/* Nav categorias */
+nav{
+  padding:16px 12px;text-align:center;
+  border-bottom:1px solid var(--borda);background:#fff;
+  position:sticky;top:95px;z-index:40;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+.nav-titulo{font-family:'Bebas Neue',cursive;font-size:22px;color:var(--secundaria);letter-spacing:2px;margin-bottom:14px;}
+.nav-titulo span{color:var(--primaria);}
+.categoria-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;width:100%;max-width:520px;margin:0 auto;
+}
+.categoria-link{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  padding:18px 10px;border-radius:16px;border:3px solid transparent;
+  text-decoration:none;font-weight:900;font-size:14px;
+  transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+  position:relative;overflow:hidden;
+  box-shadow:0 4px 12px rgba(0,0,0,0.12);cursor:pointer;
+}
+.categoria-link:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 12px 28px rgba(0,0,0,0.22);}
+.categoria-link.ativo{border-color:rgba(255,255,255,0.6);transform:scale(1.02);}
+.categoria-logo{width:48px;height:48px;object-fit:contain;filter:brightness(0) invert(1);transition:transform 0.3s;}
+.categoria-link:hover .categoria-logo{transform:scale(1.15) rotate(5deg);}
+.cat-icone{font-size:32px;transition:transform 0.3s;}
+.categoria-link:hover .cat-icone{transform:scale(1.15) rotate(5deg);}
+.badge-qtd{
+  background:rgba(255,255,255,0.92);padding:3px 8px;border-radius:999px;
+  font-size:11px;font-weight:900;position:absolute;top:8px;right:8px;
+  border:1px solid rgba(0,0,0,.08);
+}
+
+/* Página de imagens */
+#pagina-catalogo{display:none;}
+.catalogo-header{
+  background:#fff;padding:14px 16px;
+  border-bottom:1px solid var(--borda);
+  position:sticky;top:95px;z-index:40;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+.busca-row{display:flex;gap:10px;align-items:center;max-width:600px;margin:0 auto;}
+.menu-form{
+  display:flex;flex:1;border-radius:12px;overflow:hidden;
+  border:2px solid #d1d5db;background:#fff;transition:border-color 0.3s;
+}
+.menu-form:focus-within{border-color:var(--primaria);}
+.menu-form input{flex:1;padding:11px 16px;border:none;outline:none;font-size:15px;font-family:'Nunito',sans-serif;}
+.menu-form button{
+  background:var(--primaria);color:#fff;border:none;
+  padding:0 16px;font-size:18px;cursor:pointer;transition:background .2s;
+}
+.menu-form button:hover{background:var(--primaria-dark);}
+.btn-voltar{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--secundaria);color:#fff;
+  padding:10px 16px;border-radius:10px;
+  text-decoration:none;font-weight:800;font-size:14px;
+  transition:transform .12s,background .2s;border:none;cursor:pointer;white-space:nowrap;
+}
+.btn-voltar:hover{background:#0f0f1f;transform:translateY(-2px);}
+
+h1.cat-titulo{
+  font-family:'Bebas Neue',cursive;font-size:26px;letter-spacing:2px;
+  text-align:center;margin:16px 0 6px;color:var(--secundaria);
+}
+.stats{display:flex;justify-content:center;gap:8px;margin:0 0 14px;flex-wrap:wrap;font-size:13px;}
+.pill{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:999px;padding:6px 12px;font-weight:800;color:var(--muted);}
+
+/* Grid */
+.catalogo-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;padding:0 12px;max-width:980px;margin:0 auto 24px;
+}
+.catalogo-item{
+  position:relative;background:#fff;border-radius:12px;overflow:hidden;
+  box-shadow:0 3px 10px rgba(0,0,0,.07);transition:transform .15s,box-shadow .2s;
+  border:1px solid #eef2f7;
+}
+.catalogo-item:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.12);}
+.catalogo-item img{width:100%;height:180px;object-fit:cover;display:block;background:#f3f4f6;cursor:zoom-in;}
+.num-badge{
+  position:absolute;top:8px;left:8px;
+  background:rgba(0,0,0,.65);color:#fff;
+  font-size:11px;font-weight:900;border-radius:999px;padding:4px 8px;
+}
+.item-meta{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;font-size:12px;color:#6b7280;}
+.btn-whats{
+  background:#25d366;color:#fff;padding:6px;border-radius:999px;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;text-decoration:none;transition:transform .12s,background .2s;
+}
+.btn-whats:hover{background:#1ebe5a;transform:scale(1.08);}
+
+/* Loading */
+.loading{text-align:center;padding:40px 20px;}
+.spinner{
+  width:48px;height:48px;border:5px solid #e5e7eb;
+  border-top-color:var(--primaria);border-radius:50%;
+  animation:spin 0.8s linear infinite;margin:0 auto 16px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{color:var(--muted);font-size:15px;font-weight:700;}
+
+/* Erro */
+.erro{text-align:center;padding:40px 20px;color:var(--muted);}
+.erro i{font-size:48px;display:block;margin-bottom:12px;color:#e5e7eb;}
+
+/* Paginação */
+.paginacao{text-align:center;margin:10px 0 26px;}
+.paginacao button{
+  margin:4px;padding:8px 14px;border-radius:10px;
+  font-weight:800;font-family:'Nunito',sans-serif;
+  border:1px solid #e5e7eb;background:#f3f4f6;color:#1f2937;
+  cursor:pointer;transition:background .2s,transform .12s;font-size:14px;
+}
+.paginacao button.ativo{background:var(--primaria);color:#fff;border-color:var(--primaria);transform:scale(1.05);box-shadow:0 0 8px rgba(255,107,0,.4);}
+.paginacao button:hover:not(.ativo){background:#e5e7eb;}
+
+/* Modal */
+#modal{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.88);
+  justify-content:center;align-items:center;
+  z-index:9999;padding:16px;
+}
+#modal .wrap{position:relative;max-width:96vw;max-height:92vh;}
+#modal img{max-width:96vw;max-height:86vh;border-radius:12px;box-shadow:0 0 30px rgba(0,0,0,.3);display:block;margin:0 auto;}
+#modal .fechar{
+  position:absolute;top:-8px;right:-8px;
+  background:#fff;border:none;border-radius:999px;
+  padding:6px 9px;cursor:pointer;font-weight:900;
+  box-shadow:0 4px 14px rgba(0,0,0,.25);font-size:14px;
+}
+#modal .legenda{color:#e5e7eb;text-align:center;margin-top:8px;font-size:12px;}
+
+@media(min-width:768px){
+  .categoria-grid{max-width:640px;gap:16px;}
+  .categoria-link{padding:22px 16px;}
+  .hero-title{font-size:72px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div id="logo-area">
+    <div class="logo-text">SUBLI<span>MASTER</span></div>
+  </div>
+  <div class="topo-contato">
+    <a href="https://wa.me/5566992229692" target="_blank" class="btn-topo">
+      <i class="bi bi-whatsapp"></i> WhatsApp
+    </a>
+  </div>
+</header>
+
+<div class="divider"></div>
+
+<!-- PÁGINA INICIAL -->
+<div id="pagina-inicial">
+  <div class="hero">
+    <div class="hero-sub">Bem-vindo ao</div>
+    <div class="hero-title">SUBLI<span>MASTER</span></div>
+    <div class="hero-desc">Escolha uma categoria para ver as artes disponíveis</div>
+  </div>
+
+  <nav>
+    <div class="nav-titulo">ESCOLHA UMA <span>CATEGORIA</span></div>
+    <div class="categoria-grid" id="grid-categorias"></div>
+  </nav>
+
+  <div style="text-align:center;color:#9ca3af;padding:40px 20px;">
+    <i class="bi bi-images" style="font-size:48px;display:block;margin-bottom:12px;"></i>
+    <p style="font-size:15px;">Selecione uma categoria acima para ver as artes</p>
+  </div>
+</div>
+
+<!-- PÁGINA CATÁLOGO -->
+<div id="pagina-catalogo">
+  <div class="catalogo-header">
+    <div class="busca-row">
+      <button class="btn-voltar" onclick="voltarInicio()">
+        <i class="bi bi-arrow-left"></i> Voltar
+      </button>
+      <div class="menu-form">
+        <input type="text" id="input-busca" placeholder="Buscar arte..." oninput="filtrarBusca()">
+        <button><i class="bi bi-search"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="cat-titulo" id="titulo-categoria"></h1>
+  <div class="stats" id="stats-area"></div>
+  <div id="conteudo-catalogo"></div>
+</div>
+
+<!-- Modal -->
+<div id="modal" onclick="fecharModal()">
+  <div class="wrap" onclick="event.stopPropagation()">
+    <button class="fechar" onclick="fecharModal()"><i class="bi bi-x-lg"></i></button>
+    <img id="modal-img" src="" alt="Arte ampliada">
+    <div class="legenda" id="modal-legenda"></div>
+  </div>
+</div>
+
+<script>
+// =============================================
+// CONFIGURAÇÕES
+// =============================================
+const WHATSAPP     = "5566992229692";
+const BASE_URL     = "https://impressione.online";
+const PROXY        = "https://api.allorigins.win/get?url=";
+const POR_PAGINA   = 20; // imagens por página no nosso site
+
+const CATEGORIAS = [
+  { slug: "religi%C3%A3o",   nome: "Religião",       cor: "#8B5CF6", logo: "logocatalogo/religiao.png" },
+  { slug: "Natal",            nome: "Natal",          cor: "#DC2626", logo: "logocatalogo/natal.png" },
+  { slug: "Futebol",          nome: "Futebol",        cor: "#2563EB", logo: "logocatalogo/futebol.png" },
+  { slug: "Futebol+Europa",   nome: "Futebol Europa", cor: "#059669", logo: "logocatalogo/europa.png" },
+  { slug: "interclass",       nome: "Interclass",     cor: "#7C3AED", logo: "logocatalogo/classe.png" },
+  { slug: "Black+Friday",     nome: "Black Friday",   cor: "#1F2937", logo: null,                      icone: "bi-tag-fill" },
+  { slug: "abad%C3%A1",       nome: "Abadá",          cor: "#FFA726", logo: "logocatalogo/carnaval.png" },
+  { slug: "outubro+rosa",     nome: "Outubro Rosa",   cor: "#EC4899", logo: "logocatalogo/rosa.png" },
+];
+
+// =============================================
+// ESTADO
+// =============================================
+let todasImagens   = [];  // todas imagens da categoria carregada
+let imagensFiltradas = []; // após filtro de busca
+let paginaAtual    = 1;
+let catAtual       = null;
+
+// =============================================
+// INIT: renderizar categorias
+// =============================================
+function renderCategorias() {
+  const grid = document.getElementById("grid-categorias");
+  grid.innerHTML = CATEGORIAS.map(c => `
+    <div class="categoria-link" style="background:${c.cor};color:#fff;"
+         onclick="abrirCategoria('${c.slug}','${c.nome}','${c.cor}')">
+      ${c.logo
+        ? `<img src="${BASE_URL}/${c.logo}" alt="${c.nome}" class="categoria-logo" onerror="this.style.display='none'">`
+        : `<i class="bi ${c.icone} cat-icone" style="color:#fff;font-size:32px;"></i>`
+      }
+      <span style="color:#fff;">${c.nome}</span>
+      <span class="badge-qtd" style="color:${c.cor};" id="badge-${c.slug}">...</span>
+    </div>
+  `).join("");
+
+  // Buscar contagem de cada categoria em background
+  CATEGORIAS.forEach(c => carregarContagem(c));
+}
+
+async function carregarContagem(cat) {
+  try {
+    const url = `${BASE_URL}/index.php?categoria=${cat.slug}`;
+    const res = await fetch(`${PROXY}${encodeURIComponent(url)}`);
+    const data = await res.json();
+    const match = data.contents.match(/Total:\s*<strong>(\d+)<\/strong>/);
+    if (match) {
+      const badge = document.getElementById(`badge-${cat.slug}`);
+      if (badge) badge.textContent = match[1] + " artes";
+    }
+  } catch(e) {}
+}
+
+// =============================================
+// ABRIR CATEGORIA
+// =============================================
+async function abrirCategoria(slug, nome, cor) {
+  catAtual = { slug, nome, cor };
+  todasImagens = [];
+  imagensFiltradas = [];
+  paginaAtual = 1;
+
+  document.getElementById("pagina-inicial").style.display = "none";
+  document.getElementById("pagina-catalogo").style.display = "block";
+  document.getElementById("titulo-categoria").textContent = nome;
+  document.getElementById("input-busca").value = "";
+  document.getElementById("stats-area").innerHTML = `<span class="pill">Carregando artes...</span>`;
+  document.getElementById("conteudo-catalogo").innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Buscando artes de ${nome}...</p>
+    </div>`;
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // Buscar página 1 primeiro para saber total de páginas
+  const pagina1 = await fetchPagina(slug, 1);
+  if (!pagina1) {
+    mostrarErro("Não foi possível carregar as artes. Tente novamente.");
+    return;
+  }
+
+  const totalPaginas = pagina1.totalPaginas;
+  todasImagens = [...pagina1.imagens];
+
+  // Atualizar stats enquanto carrega
+  atualizarStats();
+  renderPagina();
+
+  // Buscar restante em paralelo
+  if (totalPaginas > 1) {
+    const promises = [];
+    for (let p = 2; p <= totalPaginas; p++) {
+      promises.push(fetchPagina(slug, p));
+    }
+    const resultados = await Promise.allSettled(promises);
+    resultados.forEach(r => {
+      if (r.status === "fulfilled" && r.value) {
+        todasImagens = [...todasImagens, ...r.value.imagens];
+      }
+    });
+    imagensFiltradas = todasImagens;
+    atualizarStats();
+    renderPagina();
+  }
+}
+
+// =============================================
+// FETCH DE UMA PÁGINA DO IMPRESSIONE
+// =============================================
+async function fetchPagina(slug, pagina) {
+  try {
+    const url = `${BASE_URL}/index.php?categoria=${slug}&pagina=${pagina}`;
+    const res = await fetch(`${PROXY}${encodeURIComponent(url)}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const html = data.contents;
+
+    // Extrair imagens (thumbs)
+    const imgRegex = /src="(uploads\/[^"]+thumbs\/[^"]+?)(?:\?[^"]*)?"/g;
+    const imagens = [];
+    let match;
+    while ((match = imgRegex.exec(html)) !== null) {
+      imagens.push(match[1]);
+    }
+
+    // Total de páginas
+    const paginasMatch = html.match(/\?categoria=[^"]*&pagina=(\d+)/g);
+    let totalPaginas = 1;
+    if (paginasMatch) {
+      const nums = paginasMatch.map(m => parseInt(m.match(/pagina=(\d+)/)[1]));
+      totalPaginas = Math.max(...nums);
+    }
+
+    return { imagens, totalPaginas };
+  } catch(e) {
+    return null;
+  }
+}
+
+// =============================================
+// RENDER
+// =============================================
+function atualizarStats() {
+  imagensFiltradas = filtrar(todasImagens, document.getElementById("input-busca").value);
+  const total = imagensFiltradas.length;
+  const totalPags = Math.ceil(total / POR_PAGINA);
+  document.getElementById("stats-area").innerHTML = `
+    <span class="pill"><i class="bi bi-images"></i> ${total} artes</span>
+    ${totalPags > 1 ? `<span class="pill">Página ${paginaAtual} / ${totalPags}</span>` : ""}
+    ${todasImagens.length < imagensFiltradas.length + 1 ? "" : `<span class="pill">🔎 Filtrado</span>`}
+  `;
+}
+
+function renderPagina() {
+  imagensFiltradas = filtrar(todasImagens, document.getElementById("input-busca").value);
+  const total = imagensFiltradas.length;
+  const totalPags = Math.ceil(total / POR_PAGINA);
+
+  if (paginaAtual > totalPags) paginaAtual = 1;
+
+  const inicio = (paginaAtual - 1) * POR_PAGINA;
+  const fatia  = imagensFiltradas.slice(inicio, inicio + POR_PAGINA);
+
+  atualizarStats();
+
+  if (fatia.length === 0) {
+    document.getElementById("conteudo-catalogo").innerHTML = `
+      <div class="erro">
+        <i class="bi bi-search"></i>
+        <p>Nenhuma arte encontrada.</p>
+      </div>`;
+    return;
+  }
+
+  const itens = fatia.map((img, i) => {
+    const num     = inicio + i + 1;
+    const src     = `${BASE_URL}/${img}`;
+    const nome    = decodeURIComponent(img.split("/").pop());
+    const msgWpp  = encodeURIComponent(`Olá! Vi no catálogo e quero essa arte: *${nome}* (${catAtual.nome})`);
+    return `
+      <div class="catalogo-item">
+        <img src="${src}" alt="Arte ${num}" loading="lazy"
+             onclick="abrirModal('${src}','${nome}')"
+             onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22><rect fill=%22%23f3f4f6%22 width=%22150%22 height=%22150%22/><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%23ccc%22 font-size=%2232%22>?</text></svg>'">
+        <span class="num-badge">#${num}</span>
+        <div class="item-meta">
+          <span style="font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;" title="${nome}">${nome}</span>
+          <a href="https://wa.me/${WHATSAPP}?text=${msgWpp}" target="_blank" class="btn-whats">
+            <i class="bi bi-whatsapp"></i>
+          </a>
+        </div>
+      </div>`;
+  }).join("");
+
+  const paginacao = renderPaginacao(totalPags);
+
+  document.getElementById("conteudo-catalogo").innerHTML =
+    `<div class="catalogo-grid">${itens}</div>${paginacao}`;
+}
+
+function renderPaginacao(totalPags) {
+  if (totalPags <= 1) return "";
+  let html = '<div class="paginacao">';
+
+  if (paginaAtual > 1) {
+    html += `<button onclick="irPagina(1)"><i class="bi bi-chevron-double-left"></i></button>`;
+    html += `<button onclick="irPagina(${paginaAtual - 1})"><i class="bi bi-chevron-left"></i></button>`;
+  }
+
+  const inicio = Math.max(1, paginaAtual - 2);
+  const fim    = Math.min(totalPags, paginaAtual + 2);
+  for (let p = inicio; p <= fim; p++) {
+    html += `<button class="${p === paginaAtual ? 'ativo' : ''}" onclick="irPagina(${p})">${p}</button>`;
+  }
+
+  if (paginaAtual < totalPags) {
+    html += `<button onclick="irPagina(${paginaAtual + 1})"><i class="bi bi-chevron-right"></i></button>`;
+    html += `<button onclick="irPagina(${totalPags})"><i class="bi bi-chevron-double-right"></i></button>`;
+  }
+
+  return html + "</div>";
+}
+
+function irPagina(p) {
+  paginaAtual = p;
+  renderPagina();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// =============================================
+// BUSCA
+// =============================================
+function filtrar(lista, termo) {
+  if (!termo.trim()) return lista;
+  const t = termo.toLowerCase();
+  return lista.filter(img => img.toLowerCase().includes(t));
+}
+
+let buscaTimer;
+function filtrarBusca() {
+  clearTimeout(buscaTimer);
+  buscaTimer = setTimeout(() => {
+    paginaAtual = 1;
+    renderPagina();
+  }, 300);
+}
+
+// =============================================
+// VOLTAR
+// =============================================
+function voltarInicio() {
+  document.getElementById("pagina-catalogo").style.display = "none";
+  document.getElementById("pagina-inicial").style.display = "block";
+  catAtual = null;
+  todasImagens = [];
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// =============================================
+// MODAL
+// =============================================
+function abrirModal(src, nome) {
+  document.getElementById("modal-img").src = src;
+  document.getElementById("modal-legenda").textContent = nome;
+  document.getElementById("modal").style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+function fecharModal() {
+  document.getElementById("modal").style.display = "none";
+  document.body.style.overflow = "auto";
+}
+
+function mostrarErro(msg) {
+  document.getElementById("conteudo-catalogo").innerHTML = `
+    <div class="erro">
+      <i class="bi bi-wifi-off"></i>
+      <p>${msg}</p>
+    </div>`;
+}
+
+// =============================================
+// ERRO
+// =============================================
+document.addEventListener("keydown", e => { if (e.key === "Escape") fecharModal(); });
+
+// =============================================
+// START
+// =============================================
+renderCategorias();
+</script>
+</body>
+</html>
